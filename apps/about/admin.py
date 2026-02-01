@@ -1,92 +1,116 @@
 from django.contrib import admin
-from django.utils.html import mark_safe
-from .models import *
-# About Section
+from .models import (
+    AboutHero,
+    Topgallery,
+    Bottomgallery,
+    AboutForHeritage,
+    President,
+    PresidentSocialMediaLink,
+    MemberType,
+    BoardMember,
+    DetailImage,
+    SocialMediaLink,
+)
+from project.admin_helpers import CMSSingletonAdmin, CMSModelAdmin, image_preview, text_excerpt
+
+
 @admin.register(AboutHero)
-class AboutHeroAdmin(admin.ModelAdmin):
+class AboutHeroAdmin(CMSSingletonAdmin):
     list_display = ("id", "hero_image_preview")
-    
+
+    @admin.display(description="Hero Image")
     def hero_image_preview(self, obj):
-        if obj.hero_image:
-            return mark_safe(f'<img src="{obj.hero_image.url}" width="100" height="60" style="object-fit:cover;border-radius:5px;" />')
-        return "No Image"
-    hero_image_preview.short_description = "Hero Image Preview"
+        return image_preview(obj, "hero_image", width=120, height=70)
 
 
 @admin.register(Topgallery)
-class TopgalleryAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "sub_title", "top_image_preview")
+class TopgalleryAdmin(CMSModelAdmin):
+    list_display = ("id", "title", "subtitle_preview", "top_image_preview")
     search_fields = ("title", "sub_title")
-    
+
+    @admin.display(description="Subtitle")
+    def subtitle_preview(self, obj):
+        return text_excerpt(obj.sub_title, length=80)
+
+    @admin.display(description="Top Image")
     def top_image_preview(self, obj):
-        if obj.top_image:
-            return mark_safe(f'<img src="{obj.top_image.url}" width="80" height="50" style="object-fit:cover;border-radius:5px;" />')
-        return "No Image"
-    top_image_preview.short_description = "Top Image Preview"
+        return image_preview(obj, "top_image", width=90, height=60)
 
 
 @admin.register(Bottomgallery)
-class BottomgalleryAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "sub_title", "bottom_image_preview")
+class BottomgalleryAdmin(CMSModelAdmin):
+    list_display = ("id", "title", "subtitle_preview", "bottom_image_preview")
     search_fields = ("title", "sub_title")
-    
+
+    @admin.display(description="Subtitle")
+    def subtitle_preview(self, obj):
+        return text_excerpt(obj.sub_title, length=80)
+
+    @admin.display(description="Bottom Image")
     def bottom_image_preview(self, obj):
-        if obj.bottom_image:
-            return mark_safe(f'<img src="{obj.bottom_image.url}" width="80" height="50" style="object-fit:cover;border-radius:5px;" />')
-        return "No Image"
-    bottom_image_preview.short_description = "Bottom Image Preview"
+        return image_preview(obj, "bottom_image", width=90, height=60)
 
 
 @admin.register(AboutForHeritage)
-class AboutForHeritageAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "descriptions", "heritage_image_preview")
+class AboutForHeritageAdmin(CMSSingletonAdmin):
+    list_display = ("id", "title", "description_preview", "image_preview")
     search_fields = ("title", "descriptions")
-    
-    def heritage_image_preview(self, obj):
-        if obj.image:
-            return mark_safe(f'<img src="{obj.image.url}" width="80" height="50" style="object-fit:cover;border-radius:5px;" />')
-        return "No Image"
-    heritage_image_preview.short_description = "Image Preview"
+
+    @admin.display(description="Description")
+    def description_preview(self, obj):
+        return text_excerpt(obj.descriptions, length=90)
+
+    @admin.display(description="Image")
+    def image_preview(self, obj):
+        return image_preview(obj, "image", width=90, height=60)
 
 
-# Member Section
-class SocialMediaLinkInline(admin.TabularInline):
+class PresidentSocialMediaInline(admin.TabularInline):
     model = PresidentSocialMediaLink
-    extra = 1
+    extra = 0
 
 
 @admin.register(President)
-class PresidentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'designation', 'email')
-    search_fields = ('name', 'designation', 'email')
-    inlines = [SocialMediaLinkInline]
+class PresidentAdmin(CMSSingletonAdmin):
+    list_display = ("name", "designation", "email", "image_preview")
+    search_fields = ("name", "designation", "email")
+    inlines = [PresidentSocialMediaInline]
+
+    @admin.display(description="Photo")
+    def image_preview(self, obj):
+        return image_preview(obj, "image", width=60, height=60)
 
 
 @admin.register(MemberType)
-class MemberTypeAdmin(admin.ModelAdmin):
+class MemberTypeAdmin(CMSModelAdmin):
     list_display = ("id", "type_name")
     search_fields = ("type_name",)
 
 
 class DetailImageInline(admin.TabularInline):
     model = DetailImage
-    extra = 1
+    extra = 0
+    fields = ("detail_image", "image_preview")
+    readonly_fields = ("image_preview",)
+
+    @admin.display(description="Preview")
+    def image_preview(self, obj):
+        return image_preview(obj, "detail_image", width=60, height=60)
 
 
-class SocialMediaLinkInline(admin.TabularInline):
+class BoardMemberSocialMediaInline(admin.TabularInline):
     model = SocialMediaLink
-    extra = 1
+    extra = 0
 
 
 @admin.register(BoardMember)
-class BoardMemberAdmin(admin.ModelAdmin):
-    list_display = ("id", "member_name", "designation", "member_type", "image_preview")
+class BoardMemberAdmin(CMSModelAdmin):
+    list_display = ("id", "member_name", "designation", "member_type", "photo_preview")
     list_filter = ("member_type",)
     search_fields = ("member_name", "designation")
-    inlines = [DetailImageInline, SocialMediaLinkInline]
+    list_select_related = ("member_type",)
+    inlines = [DetailImageInline, BoardMemberSocialMediaInline]
 
-    def image_preview(self, obj):
-        if obj.member_image:
-            return mark_safe(f'<img src="{obj.member_image.url}" width="60" height="60" style="object-fit:cover;border-radius:5px;" />')
-        return "No Image"
-    image_preview.short_description = "Preview"
+    @admin.display(description="Photo")
+    def photo_preview(self, obj):
+        return image_preview(obj, "member_image", width=60, height=60)

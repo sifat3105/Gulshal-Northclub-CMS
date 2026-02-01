@@ -1,40 +1,42 @@
 from django.contrib import admin
-from .models import (
-    FooterBrand,
-    UsefulLink,
-    SocialMedia,
-    ContactInfo,
-    FooterCopyright
-)
+from .models import FooterBrand, UsefulLink, SocialMedia, ContactInfo, FooterCopyright
+from project.admin_helpers import CMSSingletonAdmin, CMSModelAdmin, image_preview
 
-# Register your models here.
 
-class SingletonModelAdmin(admin.ModelAdmin):
-    def has_add_permission(self, request):
-        # Only allow adding if no object exists
-        count = self.model.objects.count()
-        if count == 0:
-            return True
-        return False
-
-# Register models with singleton behavior
 @admin.register(FooterBrand)
-class FooterBrandAdmin(SingletonModelAdmin):
-    list_display = ('short_text',)
+class FooterBrandAdmin(CMSSingletonAdmin):
+    list_display = ("id", "short_text", "background_preview", "logo_preview")
+
+    @admin.display(description="Background")
+    def background_preview(self, obj):
+        return image_preview(obj, "baground_image", width=80, height=60)
+
+    @admin.display(description="Logo")
+    def logo_preview(self, obj):
+        return image_preview(obj, "logo", width=60, height=60)
+
 
 @admin.register(ContactInfo)
-class ContactInfoAdmin(SingletonModelAdmin):
-    list_display = ('address_line1', 'office_phone')
+class ContactInfoAdmin(CMSSingletonAdmin):
+    list_display = ("address_line1", "office_phone")
+
 
 @admin.register(FooterCopyright)
-class FooterCopyrightAdmin(SingletonModelAdmin):
-    list_display = ('text',)
+class FooterCopyrightAdmin(CMSSingletonAdmin):
+    list_display = ("text",)
 
-# Useful links & social media can have multiple entries
+
 @admin.register(UsefulLink)
-class UsefulLinkAdmin(admin.ModelAdmin):
-    list_display = ('title', 'url')
+class UsefulLinkAdmin(CMSModelAdmin):
+    list_display = ("title", "url")
+    search_fields = ("title", "url")
+
 
 @admin.register(SocialMedia)
-class SocialMediaAdmin(admin.ModelAdmin):
-    list_display = ('name', 'icon', 'url')
+class SocialMediaAdmin(CMSModelAdmin):
+    list_display = ("name", "icon_preview", "url")
+    search_fields = ("name", "url")
+
+    @admin.display(description="Icon")
+    def icon_preview(self, obj):
+        return image_preview(obj, "icon", width=30, height=30)

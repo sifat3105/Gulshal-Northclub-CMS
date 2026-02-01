@@ -1,18 +1,27 @@
 from django.contrib import admin
 from .models import (
-    # event hero section
-    EventHero, RunningEventHero, 
-    UpcomingEventHero, PastEventHero,
-    # event section
-    Event,EventImage,RunningEvent,UpcomingEvent,PastEventPhoto,
-    PastEvent,CompletedEvent,FineDining,
-    LiveMusic,FineDiningSecond,EventGallery,
+    RunningEventHero,
+    UpcomingEventHero,
+    PastEventHero,
+    EventImage,
+    RunningEvent,
+    UpcomingEvent,
+    PastEventPhoto,
+    PastEvent,
+    CompletedEvent,
+    FineDining,
+    LiveMusic,
+    FineDiningSecond,
+    EventGallery,
 )
+from project.admin_helpers import CMSModelAdmin, image_preview
 
-# Event hero admin
-class BaseEventHeroAdmin(admin.ModelAdmin):
-    list_display = ("hero_title", "is_active")
+
+class BaseEventHeroAdmin(CMSModelAdmin):
+    list_display = ("hero_title", "hero_preview", "is_active", "created_at")
     list_filter = ("is_active",)
+    search_fields = ("hero_title", "hero_description")
+    ordering = ("-id",)
 
     event_type = None
 
@@ -30,6 +39,13 @@ class BaseEventHeroAdmin(admin.ModelAdmin):
             fields.remove("event_type")
         return fields
 
+    def has_add_permission(self, request):
+        return not self.model.objects.filter(event_type=self.event_type).exists()
+
+    @admin.display(description="Image")
+    def hero_preview(self, obj):
+        return image_preview(obj, "hero_image", width=120, height=70)
+
 
 @admin.register(RunningEventHero)
 class RunningEventHeroAdmin(BaseEventHeroAdmin):
@@ -46,41 +62,45 @@ class PastEventHeroAdmin(BaseEventHeroAdmin):
     event_type = "past"
 
 
-
-
-# Event section admin
 class EventImageInline(admin.TabularInline):
     model = EventImage
-    extra = 1
+    extra = 0
+    fields = ("image", "image_preview")
+    readonly_fields = ("image_preview",)
+
+    @admin.display(description="Preview")
+    def image_preview(self, obj):
+        return image_preview(obj, "image", width=80, height=60)
 
 
-class BaseEventAdmin(admin.ModelAdmin):
+class BaseEventAdmin(CMSModelAdmin):
     inlines = [EventImageInline]
-    list_display = ("title", "event_type", "event_date")
-    ordering = ("-id",)
+    list_display = ("title", "event_date", "is_active", "created_at")
+    list_filter = ("is_active",)
+    search_fields = ("title", "description")
+    date_hierarchy = "event_date"
+    ordering = ("-event_date", "-id")
 
-    # 🔹 Filter per proxy (IMPORTANT)
+    event_type = None
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        if hasattr(self, "event_type"):
+        if self.event_type:
             return qs.filter(event_type=self.event_type)
         return qs
 
-    # 🔹 Auto set event_type on save
     def save_model(self, request, obj, form, change):
-        if hasattr(self, "event_type"):
+        if self.event_type:
             obj.event_type = self.event_type
         super().save_model(request, obj, form, change)
 
-    # 🔹 Hide event_type field from form (NO CONFUSION)
     def get_fields(self, request, obj=None):
-        fields = super().get_fields(request, obj)
+        fields = list(super().get_fields(request, obj))
         if "event_type" in fields:
             fields.remove("event_type")
         return fields
 
 
-# ===== EVENT STATUS =====
 @admin.register(RunningEvent)
 class RunningEventAdmin(BaseEventAdmin):
     event_type = "running"
@@ -95,16 +115,17 @@ class UpcomingEventAdmin(BaseEventAdmin):
 class PastEventAdmin(BaseEventAdmin):
     event_type = "past"
 
+
 @admin.register(PastEventPhoto)
 class PastEventPhotoAdmin(BaseEventAdmin):
     event_type = "past_photo"
+
 
 @admin.register(CompletedEvent)
 class CompletedEventAdmin(BaseEventAdmin):
     event_type = "completed"
 
 
-# ===== EXPERIENCE SECTIONS =====
 @admin.register(FineDining)
 class FineDiningAdmin(BaseEventAdmin):
     event_type = "fine_dining"
@@ -120,7 +141,6 @@ class FineDiningSecondAdmin(BaseEventAdmin):
     event_type = "fine_dining_2"
 
 
-# ===== GALLERY =====
 @admin.register(EventGallery)
 class EventGalleryAdmin(BaseEventAdmin):
     event_type = "gallery"

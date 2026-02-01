@@ -1,80 +1,89 @@
-from django.shortcuts import redirect
-from django.urls import reverse
 from django.contrib import admin
-from .models import *
-from unfold.admin import ModelAdmin
+from .models import (
+    Hero,
+    ClubFacilitiesHead,
+    Facilities,
+    OurMomentsHead,
+    OurMoments,
+    AffiliatCollabHead,
+    AffiliatCollab,
+    ClubEventHead,
+    ClubEvents,
+)
+from project.admin_helpers import CMSSingletonAdmin, CMSModelAdmin, image_preview, text_excerpt
 
 
-# SINGLE OBJECT ADMIN
-class SingleObjectAdmin(ModelAdmin):
-    def has_add_permission(self, request):
-        return self.model.objects.count() < 1
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def changelist_view(self, request, extra_context=None):
-        obj = self.model.objects.first()
-        if obj:
-            return redirect(reverse(
-                f"admin:{self.model._meta.app_label}_{self.model._meta.model_name}_change",
-                args=[obj.id]
-            ))
-        else:
-            return redirect(reverse(
-                f"admin:{self.model._meta.app_label}_{self.model._meta.model_name}_add"
-            ))
-
-
-# HERO
 @admin.register(Hero)
-class HeroAdmin(SingleObjectAdmin):
-    list_display = ('id', 'title', 'created_at', 'updated_at')
+class HeroAdmin(CMSSingletonAdmin):
+    list_display = ("id", "title", "hero_preview", "created_at", "updated_at")
+
+    @admin.display(description="Hero Image")
+    def hero_preview(self, obj):
+        return image_preview(obj, "bg_image", width=120, height=70)
 
 
-# CLUB FACILITIES HEAD
 @admin.register(ClubFacilitiesHead)
-class ClubFacilitiesHeadAdmin(SingleObjectAdmin):
-    list_display = ('id', 'head_text', 'created_at', 'updated_at')
+class ClubFacilitiesHeadAdmin(CMSSingletonAdmin):
+    list_display = ("id", "head_text", "created_at", "updated_at")
 
 
-# FACILITIES
 @admin.register(Facilities)
-class FacilitiesAdmin(ModelAdmin):
-    list_display = ('id', 'title', 'designation', 'created_at', 'updated_at')
+class FacilitiesAdmin(CMSModelAdmin):
+    list_display = ("id", "title", "designation_preview", "image_preview", "created_at")
+    search_fields = ("title", "designation")
+
+    @admin.display(description="Designation")
+    def designation_preview(self, obj):
+        return text_excerpt(obj.designation, length=80)
+
+    @admin.display(description="Image")
+    def image_preview(self, obj):
+        return image_preview(obj, "image", width=60, height=60)
 
 
-# OUR MOMENTS HEAD
 @admin.register(OurMomentsHead)
-class OurMomentsHeadAdmin(SingleObjectAdmin):
-    list_display = ('id', 'head_text', 'sub_head', 'created_at', 'updated_at')
+class OurMomentsHeadAdmin(CMSSingletonAdmin):
+    list_display = ("id", "head_text", "sub_head", "created_at", "updated_at")
 
 
-# OUR MOMENTS
 @admin.register(OurMoments)
-class OurMomentsAdmin(ModelAdmin):
-    list_display = ('id', 'our_moment', 'created_at', 'updated_at')
+class OurMomentsAdmin(CMSModelAdmin):
+    list_display = ("id", "our_moment", "image_preview", "created_at")
+    list_select_related = ("our_moment",)
+
+    @admin.display(description="Image")
+    def image_preview(self, obj):
+        return image_preview(obj, "image", width=60, height=60)
 
 
-# AFFILIATION HEAD
 @admin.register(AffiliatCollabHead)
-class AffiliatCollabHeadAdmin(SingleObjectAdmin):
-    list_display = ('id', 'head_text', 'sub_head', 'created_at', 'updated_at')
+class AffiliatCollabHeadAdmin(CMSSingletonAdmin):
+    list_display = ("id", "head_text", "sub_head", "created_at", "updated_at")
 
 
-# AFFILIATIONS LOGO
 @admin.register(AffiliatCollab)
-class AffiliatCollabAdmin(ModelAdmin):
-    list_display = ('id', 'created_at', 'updated_at')
+class AffiliatCollabAdmin(CMSModelAdmin):
+    list_display = ("id", "logo_preview", "created_at")
+
+    @admin.display(description="Logo")
+    def logo_preview(self, obj):
+        return image_preview(obj, "logo", width=60, height=60)
 
 
-# CLUB EVENT HEAD
 @admin.register(ClubEventHead)
-class ClubEventHeadAdmin(SingleObjectAdmin):
-    list_display = ('id', 'head_text', 'created_at', 'updated_at')
+class ClubEventHeadAdmin(CMSSingletonAdmin):
+    list_display = ("id", "head_text", "created_at", "updated_at")
 
 
-# CLUB EVENTS
 @admin.register(ClubEvents)
-class ClubEventsAdmin(ModelAdmin):
-    list_display = ('id', 'event_name', 'created_at', 'updated_at')
+class ClubEventsAdmin(CMSModelAdmin):
+    list_display = ("id", "event_name", "description_preview", "image_preview", "created_at")
+    search_fields = ("event_name", "description")
+
+    @admin.display(description="Description")
+    def description_preview(self, obj):
+        return text_excerpt(obj.description, length=90)
+
+    @admin.display(description="Image")
+    def image_preview(self, obj):
+        return image_preview(obj, "images", width=60, height=60)
