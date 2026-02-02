@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
+
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,99 +34,500 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'rest_framework',
-    'unfold',
+    "unfold",
     "unfold.contrib.filters",
     "unfold.contrib.inlines",
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django_filters',
-    'apps.home',
-    'apps.accommodation',
-    'apps.gallery',
-    'apps.notice',
-    'apps.about',
-    'apps.contact',
-    'apps.events',
-    'apps.footer',
-    'apps.facilities'
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django_filters",
+    "rest_framework",
+    "apps.home",
+    "apps.accommodation",
+    "apps.gallery",
+    "apps.notice",
+    "apps.about",
+    "apps.contact",
+    "apps.events",
+    "apps.footer",
+    "apps.facilities",
 ]
 
 
 
 UNFOLD = {
-    "SITE_HEADER": "NorthClub Admin",
-    "SITE_TITLE": "NorthClub Dashboard",
+    "SITE_HEADER": "NorthClub CMS",
+    "SITE_TITLE": "NorthClub Admin Panel",
+    "SITE_SUBHEADER": "Content Management",
     "SITE_URL": "/",
+    "SITE_SYMBOL": "shield_person",
 
     "COLORS": {
+        "base": {
+            "50": "#f7f7f8",
+            "100": "#efeff2",
+            "200": "#ddddE2",
+            "300": "#c8c9d1",
+            "400": "#b0b3be",
+            "500": "#8f94a4",
+            "600": "#6b7284",
+            "700": "#4f5565",
+            "800": "#363c4b",
+            "900": "#1f2430",
+            "950": "#131824",
+        },
         "primary": {
-            "50": "#eff6ff",
-            "100": "#dbeafe",
-            "200": "#bfdbfe",
-            "300": "#93c5fd",
-            "400": "#60a5fa",
-            "500": "#3b82f6",
-            "600": "#2563eb",
-            "700": "#1d4ed8",
-            "800": "#1e40af",
-            "900": "#1e3a8a",
+            "50": "#eef9f7",
+            "100": "#d7f2ec",
+            "200": "#afe5d9",
+            "300": "#7ad2bf",
+            "400": "#4cb8a2",
+            "500": "#2f9e89",
+            "600": "#1e826f",
+            "700": "#19695b",
+            "800": "#165449",
+            "900": "#14463d",
+            "950": "#0b2a25",
         },
-        "secondary": {
-            "50": "#fdf2f8",
-            "100": "#fce7f3",
-            "200": "#fbcfe8",
-            "300": "#f9a8d4",
-            "400": "#f472b6",
-            "500": "#ec4899",
-            "600": "#db2777",
-            "700": "#be185d",
-            "800": "#9d174d",
-            "900": "#831843",
-        },
-        "neutral": {
-            "50": "#f8fafc",
-            "100": "#f1f5f9",
-            "200": "#e2e8f0",
-            "300": "#cbd5e1",
-            "400": "#94a3b8",
-            "500": "#64748b",
-            "600": "#475569",
-            "700": "#334155",
-            "800": "#1e293b",
-            "900": "#0f172a",
+        "font": {
+            "subtle-light": "#6b7284",
+            "subtle-dark": "#b0b3be",
+            "default-light": "#4f5565",
+            "default-dark": "#c8c9d1",
+            "important-light": "#1f2430",
+            "important-dark": "#efeff2",
         }
-    },
-
-    "ICONS": {
-        "auth": "fa-solid fa-users",
-        "about": "fa-solid fa-circle-info",
-        "boardmember": "fa-solid fa-id-card",
-        "blog": "fa-solid fa-newspaper",
-        "contact": "fa-solid fa-envelope",
-        "event": "fa-solid fa-calendar-check",
-        "gallery": "fa-solid fa-images",
-        "settings": "fa-solid fa-gear",
     },
 
     "STYLES": ["admin/custom-dashboard.css"],
     "SCRIPTS": ["admin/custom-dashboard.js"],
+    "DASHBOARD_CALLBACK": "project.dashboard.admin_dashboard_callback",
+    "COMMAND": {
+        "search_models": True,
+        "show_history": True,
+    },
+    "ACCOUNT": {
+        "navigation": [
+            {
+                "title": "Change password",
+                "link": reverse_lazy("admin:password_change"),
+            },
+            {
+                "title": "View website",
+                "link": "/",
+            },
+        ],
+    },
 
     "SIDEBAR": {
-        "COLLAPSE": True,
-        "ICONS_ONLY": False,
-        "SHOW_BRAND": True,
+        "show_search": True,
+        "command_search": True,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": "Admin",
+                "separator": False,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "Dashboard",
+                        "icon": "space_dashboard",
+                        "link": reverse_lazy("admin:index"),
+                    },
+                    {
+                        "title": "Users",
+                        "icon": "group",
+                        "link": reverse_lazy("admin:auth_user_changelist"),
+                    },
+                    {
+                        "title": "Groups",
+                        "icon": "group_work",
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Home Sections",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Hero Section",
+                        "icon": "flag",
+                        "link": reverse_lazy("admin:home_hero_changelist"),
+                    },
+                    {
+                        "title": "Club Facilities Header",
+                        "icon": "title",
+                        "link": reverse_lazy("admin:home_clubfacilitieshead_changelist"),
+                    },
+                    {
+                        "title": "Club Facilities Items",
+                        "icon": "view_carousel",
+                        "link": reverse_lazy("admin:home_facilities_changelist"),
+                    },
+                    {
+                        "title": "Our Moments Header",
+                        "icon": "title",
+                        "link": reverse_lazy("admin:home_ourmomentshead_changelist"),
+                    },
+                    {
+                        "title": "Our Moments Gallery",
+                        "icon": "collections",
+                        "link": reverse_lazy("admin:home_ourmoments_changelist"),
+                    },
+                    {
+                        "title": "Affiliations Header",
+                        "icon": "title",
+                        "link": reverse_lazy("admin:home_affiliatcollabhead_changelist"),
+                    },
+                    {
+                        "title": "Affiliation Logos",
+                        "icon": "link",
+                        "link": reverse_lazy("admin:home_affiliatcollab_changelist"),
+                    },
+                    {
+                        "title": "Club Events Header",
+                        "icon": "title",
+                        "link": reverse_lazy("admin:home_clubeventhead_changelist"),
+                    },
+                    {
+                        "title": "Club Event Cards",
+                        "icon": "calendar_month",
+                        "link": reverse_lazy("admin:home_clubevents_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "About Sections",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "About Hero",
+                        "icon": "image",
+                        "link": reverse_lazy("admin:about_abouthero_changelist"),
+                    },
+                    {
+                        "title": "Top Gallery",
+                        "icon": "view_agenda",
+                        "link": reverse_lazy("admin:about_topgallery_changelist"),
+                    },
+                    {
+                        "title": "Bottom Gallery",
+                        "icon": "view_agenda",
+                        "link": reverse_lazy("admin:about_bottomgallery_changelist"),
+                    },
+                    {
+                        "title": "Heritage Block",
+                        "icon": "history_edu",
+                        "link": reverse_lazy("admin:about_aboutforheritage_changelist"),
+                    },
+                    {
+                        "title": "President Message",
+                        "icon": "record_voice_over",
+                        "link": reverse_lazy("admin:about_president_changelist"),
+                    },
+                    {
+                        "title": "Member Types",
+                        "icon": "category",
+                        "link": reverse_lazy("admin:about_membertype_changelist"),
+                    },
+                    {
+                        "title": "Board Members",
+                        "icon": "badge",
+                        "link": reverse_lazy("admin:about_boardmember_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Accommodation Sections",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Accommodation Hero",
+                        "icon": "hotel",
+                        "link": reverse_lazy("admin:accommodation_accommodationhero_changelist"),
+                    },
+                    {
+                        "title": "Intro Gallery",
+                        "icon": "collections",
+                        "link": reverse_lazy("admin:accommodation_galleryimage_changelist"),
+                    },
+                    {
+                        "title": "Banner Section",
+                        "icon": "crop_landscape",
+                        "link": reverse_lazy("admin:accommodation_bannerimage_changelist"),
+                    },
+                    {
+                        "title": "Luxury Cards",
+                        "icon": "diamond",
+                        "link": reverse_lazy("admin:accommodation_luxury_changelist"),
+                    },
+                    {
+                        "title": "Services",
+                        "icon": "room_service",
+                        "link": reverse_lazy("admin:accommodation_provide_changelist"),
+                    },
+                    {
+                        "title": "Impression Section",
+                        "icon": "auto_awesome",
+                        "link": reverse_lazy("admin:accommodation_impressions_changelist"),
+                    },
+                    {
+                        "title": "Impression Images",
+                        "icon": "perm_media",
+                        "link": reverse_lazy("admin:accommodation_impressionsimages_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Gallery Sections",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Membership Gallery Page",
+                        "icon": "photo",
+                        "link": reverse_lazy("admin:gallery_membershipgallery_changelist"),
+                    },
+                    {
+                        "title": "Reservation Gallery Page",
+                        "icon": "photo",
+                        "link": reverse_lazy("admin:gallery_reservationgallery_changelist"),
+                    },
+                    {
+                        "title": "Menu Gallery Page",
+                        "icon": "photo",
+                        "link": reverse_lazy("admin:gallery_menugallery_changelist"),
+                    },
+                    {
+                        "title": "Memberships: Fine Dining",
+                        "icon": "restaurant",
+                        "link": reverse_lazy("admin:gallery_membershipfinedining_changelist"),
+                    },
+                    {
+                        "title": "Memberships: Live Music",
+                        "icon": "music_note",
+                        "link": reverse_lazy("admin:gallery_membershiplivemusic_changelist"),
+                    },
+                    {
+                        "title": "Memberships: Fine Dining Second",
+                        "icon": "restaurant_menu",
+                        "link": reverse_lazy("admin:gallery_membershipfinediningsecond_changelist"),
+                    },
+                    {
+                        "title": "Reservation: Fine Dining",
+                        "icon": "restaurant",
+                        "link": reverse_lazy("admin:gallery_reservationfinedining_changelist"),
+                    },
+                    {
+                        "title": "Reservation: Live Music",
+                        "icon": "music_note",
+                        "link": reverse_lazy("admin:gallery_reservationlivemusic_changelist"),
+                    },
+                    {
+                        "title": "Reservation: Fine Dining Second",
+                        "icon": "restaurant_menu",
+                        "link": reverse_lazy("admin:gallery_reservationfinediningsecond_changelist"),
+                    },
+                    {
+                        "title": "Menu: Fine Dining",
+                        "icon": "restaurant",
+                        "link": reverse_lazy("admin:gallery_menufinedining_changelist"),
+                    },
+                    {
+                        "title": "Menu: Live Music",
+                        "icon": "music_note",
+                        "link": reverse_lazy("admin:gallery_menulivemusic_changelist"),
+                    },
+                    {
+                        "title": "Menu: Fine Dining Second",
+                        "icon": "restaurant_menu",
+                        "link": reverse_lazy("admin:gallery_menufinediningsecond_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Events Sections",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Running Event Hero",
+                        "icon": "flag",
+                        "link": reverse_lazy("admin:events_runningeventhero_changelist"),
+                    },
+                    {
+                        "title": "Upcoming Event Hero",
+                        "icon": "schedule",
+                        "link": reverse_lazy("admin:events_upcomingeventhero_changelist"),
+                    },
+                    {
+                        "title": "Past Event Hero",
+                        "icon": "history",
+                        "link": reverse_lazy("admin:events_pasteventhero_changelist"),
+                    },
+                    {
+                        "title": "Running Events",
+                        "icon": "directions_run",
+                        "link": reverse_lazy("admin:events_runningevent_changelist"),
+                    },
+                    {
+                        "title": "Upcoming Events",
+                        "icon": "event_upcoming",
+                        "link": reverse_lazy("admin:events_upcomingevent_changelist"),
+                    },
+                    {
+                        "title": "Past Events",
+                        "icon": "event_busy",
+                        "link": reverse_lazy("admin:events_pastevent_changelist"),
+                    },
+                    {
+                        "title": "Past Event Photos",
+                        "icon": "photo_camera",
+                        "link": reverse_lazy("admin:events_pasteventphoto_changelist"),
+                    },
+                    {
+                        "title": "Completed Events",
+                        "icon": "task_alt",
+                        "link": reverse_lazy("admin:events_completedevent_changelist"),
+                    },
+                    {
+                        "title": "Fine Dining Experience",
+                        "icon": "restaurant",
+                        "link": reverse_lazy("admin:events_finedining_changelist"),
+                    },
+                    {
+                        "title": "Live Music Experience",
+                        "icon": "piano",
+                        "link": reverse_lazy("admin:events_livemusic_changelist"),
+                    },
+                    {
+                        "title": "Fine Dining Second Section",
+                        "icon": "restaurant_menu",
+                        "link": reverse_lazy("admin:events_finediningsecond_changelist"),
+                    },
+                    {
+                        "title": "Event Gallery",
+                        "icon": "photo_library",
+                        "link": reverse_lazy("admin:events_eventgallery_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Facilities Sections",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Healthcare & Gym",
+                        "icon": "fitness_center",
+                        "link": reverse_lazy("admin:facilities_healthcare_gym_changelist"),
+                    },
+                    {
+                        "title": "Salon",
+                        "icon": "content_cut",
+                        "link": reverse_lazy("admin:facilities_salon_changelist"),
+                    },
+                    {
+                        "title": "Lounges Party",
+                        "icon": "celebration",
+                        "link": reverse_lazy("admin:facilities_loungesparty_changelist"),
+                    },
+                    {
+                        "title": "Swimming Pool",
+                        "icon": "pool",
+                        "link": reverse_lazy("admin:facilities_swimmingpool_changelist"),
+                    },
+                    {
+                        "title": "Billiard & Smoking",
+                        "icon": "sports_bar",
+                        "link": reverse_lazy("admin:facilities_billiardsmoking_changelist"),
+                    },
+                    {
+                        "title": "Library",
+                        "icon": "menu_book",
+                        "link": reverse_lazy("admin:facilities_library_changelist"),
+                    },
+                    {
+                        "title": "Beauty Parlor",
+                        "icon": "spa",
+                        "link": reverse_lazy("admin:facilities_beautyparlor_changelist"),
+                    },
+                    {
+                        "title": "Laundry",
+                        "icon": "local_laundry_service",
+                        "link": reverse_lazy("admin:facilities_laundry_changelist"),
+                    },
+                    {
+                        "title": "Card Room",
+                        "icon": "style",
+                        "link": reverse_lazy("admin:facilities_cardroom_changelist"),
+                    },
+                    {
+                        "title": "Banquet Hall",
+                        "icon": "meeting_room",
+                        "link": reverse_lazy("admin:facilities_banquethall_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Contact, Footer & Notice",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Contact Page Image",
+                        "icon": "image",
+                        "link": reverse_lazy("admin:contact_contactpageimage_changelist"),
+                    },
+                    {
+                        "title": "Appointments",
+                        "icon": "pending_actions",
+                        "link": reverse_lazy("admin:contact_appointment_changelist"),
+                    },
+                    {
+                        "title": "Footer Brand",
+                        "icon": "branding_watermark",
+                        "link": reverse_lazy("admin:footer_footerbrand_changelist"),
+                    },
+                    {
+                        "title": "Useful Links",
+                        "icon": "link",
+                        "link": reverse_lazy("admin:footer_usefullink_changelist"),
+                    },
+                    {
+                        "title": "Social Media",
+                        "icon": "public",
+                        "link": reverse_lazy("admin:footer_socialmedia_changelist"),
+                    },
+                    {
+                        "title": "Footer Contact Info",
+                        "icon": "contact_phone",
+                        "link": reverse_lazy("admin:footer_contactinfo_changelist"),
+                    },
+                    {
+                        "title": "Footer Copyright",
+                        "icon": "copyright",
+                        "link": reverse_lazy("admin:footer_footercopyright_changelist"),
+                    },
+                    {
+                        "title": "Notice Cards",
+                        "icon": "campaign",
+                        "link": reverse_lazy("admin:notice_noticecard_changelist"),
+                    },
+                ],
+            },
+        ],
     },
 
     "LOGIN": {
-        "SHOW_LOGO": True,
-        "LOGO": "images/logo.png",
-        "WELCOME": "Welcome to NorthClub Admin",
-        "BACKGROUND_COLOR": "#f1f5f9",
+        "image": "admin/login-visual.svg",
     },
 }
 
@@ -210,7 +613,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_ROOT='media/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 

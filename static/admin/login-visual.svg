@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1080" role="img" aria-label="NorthClub admin background">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b2a25"/>
+      <stop offset="55%" stop-color="#1e826f"/>
+      <stop offset="100%" stop-color="#2f9e89"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.18" cy="0.2" r="0.7">
+      <stop offset="0%" stop-color="#dcfff8" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#dcfff8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1440" height="1080" fill="url(#bg)"/>
+  <rect width="1440" height="1080" fill="url(#glow)"/>
+  <g fill="none" stroke="#bff2e6" stroke-opacity="0.35">
+    <path d="M-20 760 Q 400 520 820 760 T 1460 760" stroke-width="2"/>
+    <path d="M-20 830 Q 370 620 800 830 T 1460 830" stroke-width="1.5"/>
+    <path d="M-20 900 Q 330 730 760 900 T 1460 900" stroke-width="1"/>
+  </g>
+  <g fill="#ebfffa" fill-opacity="0.25">
+    <circle cx="1180" cy="240" r="220"/>
+    <circle cx="920" cy="140" r="90"/>
+  </g>
+  <g fill="#ffffff" fill-opacity="0.88" font-family="Verdana, Geneva, sans-serif" text-anchor="start">
+    <text x="120" y="220" font-size="68" font-weight="700">NorthClub</text>
+    <text x="120" y="278" font-size="34" font-weight="400">Administration Portal</text>
+  </g>
+</svg>

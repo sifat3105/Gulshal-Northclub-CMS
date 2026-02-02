@@ -15,6 +15,10 @@ class Topgallery(models.Model):
     
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = "Top Gallery"
+        verbose_name_plural = "Top Gallery"
     
 
 class Bottomgallery(models.Model):
@@ -24,6 +28,10 @@ class Bottomgallery(models.Model):
     
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = "Bottom Gallery"
+        verbose_name_plural = "Bottom Gallery"
     
 
 class AboutForHeritage(models.Model):
@@ -57,7 +65,7 @@ class PresidentSocialMediaLink(models.Model):
 # Member Section
 class MemberType(models.Model):
     TYPE_CHOICES = [
-        ("board_of_director", "Board of Director"),
+        ("board_of_director", "Board of Directors"),
         ("executive_member", "Executive Member"),
         ("founder_member", "Founder Member"),
     ]

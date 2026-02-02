@@ -1,0 +1,132 @@
+{% extends "admin/base.html" %}
+
+{% load i18n %}
+
+{% block title %}
+    {% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_("Django site admin") }}
+{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+    <div class="nc-dashboard">
+        <section class="nc-hero">
+            <p class="nc-kicker">NorthClub</p>
+            <h1>Admin Dashboard</h1>
+            <p>Welcome back. Manage content, track activity, and jump into key sections quickly.</p>
+        </section>
+
+        <section>
+            <h2 class="nc-section-title">Overview</h2>
+            <div class="nc-stats-grid">
+                {% for stat in dashboard_stats %}
+                    <article class="nc-stat-card">
+                        <div class="nc-stat-head">
+                            <span class="material-symbols-outlined">{{ stat.icon }}</span>
+                            <span>{{ stat.title }}</span>
+                        </div>
+                        <div class="nc-stat-value">{{ stat.value }}</div>
+                        <p class="nc-stat-note">{{ stat.note }}</p>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section>
+            <h2 class="nc-section-title">Quick Actions</h2>
+            <div class="nc-links-grid">
+                {% for item in dashboard_quick_links %}
+                    <a href="{{ item.link }}" class="nc-quick-link">
+                        <span class="material-symbols-outlined">{{ item.icon }}</span>
+                        <span>{{ item.title }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="nc-charts-grid">
+            <article class="nc-panel">
+                <div class="nc-panel-head">
+                    <h3>Appointments Trend (Last 6 Months)</h3>
+                </div>
+                <div class="nc-chart-wrap">
+                    <canvas
+                        class="chart"
+                        data-type="line"
+                        data-value="{{ dashboard_chart_appointments }}"
+                        data-options="{{ dashboard_chart_appointments_options }}"
+                    ></canvas>
+                </div>
+            </article>
+
+            <article class="nc-panel">
+                <div class="nc-panel-head">
+                    <h3>Event Status Split</h3>
+                </div>
+                <div class="nc-chart-wrap">
+                    <canvas
+                        class="chart"
+                        data-type="bar"
+                        data-value="{{ dashboard_chart_events }}"
+                        data-options="{{ dashboard_chart_events_options }}"
+                    ></canvas>
+                </div>
+            </article>
+        </section>
+
+        <section class="nc-content-grid">
+            <article class="nc-panel">
+                <div class="nc-panel-head">
+                    <h3>Recent Appointments</h3>
+                    <a href="{% url 'admin:contact_appointment_changelist' %}">View all</a>
+                </div>
+
+                {% if dashboard_recent_appointments %}
+                    <table class="nc-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appt in dashboard_recent_appointments %}
+                                <tr>
+                                    <td>{{ appt.full_name }}</td>
+                                    <td>{{ appt.email }}</td>
+                                    <td>{{ appt.created_at|date:"M d, Y" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="nc-empty">No appointment requests yet.</p>
+                {% endif %}
+            </article>
+
+            <article class="nc-panel">
+                <div class="nc-panel-head">
+                    <h3>Latest Notices</h3>
+                    <a href="{% url 'admin:notice_noticecard_changelist' %}">View all</a>
+                </div>
+
+                {% if dashboard_recent_notices %}
+                    <ul class="nc-notice-list">
+                        {% for notice in dashboard_recent_notices %}
+                            <li>
+                                <strong>{{ notice.notice_name }}</strong>
+                                <span>{{ notice.notice_subject }}</span>
+                                <time>{{ notice.notice_date|date:"M d, Y" }}</time>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="nc-empty">No notices found.</p>
+                {% endif %}
+            </article>
+        </section>
+    </div>
+{% endblock %}

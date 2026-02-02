@@ -64,26 +64,26 @@ class PlaceOffer(models.Model):
 class healthcare_gym(Place):
     class Meta:
         proxy = True
-        verbose_name = "healthcare_gym"
-        verbose_name_plural = "healthcare_gym"
+        verbose_name = "Healthcare & Gym"
+        verbose_name_plural = "Healthcare & Gym"
 
 class salon(Place):
     class Meta:
         proxy = True
-        verbose_name = "salon"
-        verbose_name_plural = "salon"
+        verbose_name = "Salon"
+        verbose_name_plural = "Salons"
 
 class LoungesParty(Place):
     class Meta:
         proxy = True
         verbose_name = "Lounges Party"
-        verbose_name_plural = "Lounges Party"
+        verbose_name_plural = "Lounges Parties"
 
 class SwimmingPool(Place):
     class Meta:
         proxy = True
         verbose_name = "Swimming Pool"
-        verbose_name_plural = "Swimming Pool"
+        verbose_name_plural = "Swimming Pools"
 
 
 class BilliardSmoking(Place):
@@ -111,7 +111,7 @@ class Laundry(Place):
     class Meta:
         proxy = True
         verbose_name = "Laundry"
-        verbose_name_plural = "Laundry"
+        verbose_name_plural = "Laundry Services"
 
 
 class CardRoom(Place):

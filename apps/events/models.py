@@ -47,14 +47,6 @@ class PastEventHero(EventHero):
 
 
 
-class PastEventHero(EventHero):
-    class Meta:
-        proxy = True
-        verbose_name = "Past Event Hero"
-        verbose_name_plural = "Past Events Hero"
-
-
-
 #  Event section model
 class Event(models.Model):
     EVENT_TYPE_CHOICES = [
