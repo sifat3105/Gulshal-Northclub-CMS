@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 
+from apps.about.models import BoardMember
+from apps.about.serializers import BoardMemberSerializerForHome
+
 
 # Hero List API
 class HeroListAPIView(APIView):
@@ -120,3 +123,19 @@ class ClubEventsAPIView(APIView):
             'message': 'Data fetched successfully',
             'data': serializer.data
         })
+
+
+
+#Board of directors
+
+class BoardOfDirectorsAPIView(APIView):
+    def get(self, request):
+        members = BoardMember.objects.all()
+        serializer = BoardMemberSerializerForHome(members, many=True)
+        return Response({
+            'status': 'success',
+            'status_code': status.HTTP_200_OK,
+            'message': 'Data fetched successfully',
+            'data': serializer.data
+        })
+        

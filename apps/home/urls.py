@@ -15,4 +15,5 @@ urlpatterns = [
 
     path('club-event-head/', ClubEventHeadAPIView.as_view()),
     path('club-events/', ClubEventsAPIView.as_view()),
+    path('board-of-directors/', BoardOfDirectorsAPIView.as_view()),
 ]
