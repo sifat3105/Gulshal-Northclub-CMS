@@ -67,3 +67,10 @@ class BoardMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardMember
         fields = '__all__'
+
+
+#Serializer for Home Page Board of Directors Section (samiul)
+class BoardMemberSerializerForHome(serializers.ModelSerializer):
+    class Meta:
+        model = BoardMember
+        fields = '__all__'
