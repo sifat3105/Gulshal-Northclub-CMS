@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import Event,EventHero
-from .serializers import EventSerializer,EventHeroSerializer
+from .models import Event, EventHero, RunningEventSlider
+from .serializers import EventSerializer, EventHeroSerializer, RunningEventSliderSerializer
 
 
 
@@ -120,3 +120,19 @@ class FineDiningSecondAPIView(BaseEventAPIView):
 # ===== GALLERY API =====
 class EventGalleryAPIView(BaseEventAPIView):
     event_type = "gallery"
+
+
+# ===== RUNNING EVENT SLIDER API =====
+class RunningEventSliderAPIView(APIView):
+    def get(self, request):
+        items = RunningEventSlider.objects.filter(is_active=True)
+        serializer = RunningEventSliderSerializer(items, many=True)
+        return Response(
+            {
+                "status": "success",
+                "message": "Running event slider images fetched successfully",
+                "count": items.count(),
+                "data": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )

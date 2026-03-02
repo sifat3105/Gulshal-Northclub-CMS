@@ -74,3 +74,18 @@ class BoardMemberSerializerForHome(serializers.ModelSerializer):
     class Meta:
         model = BoardMember
         fields = '__all__'
+
+
+# ── Club History Serializers ──────────────────────────────────────────────────
+class ClubHistoryImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClubHistoryImage
+        fields = ['id', 'image']
+
+
+class ClubHistorySerializer(serializers.ModelSerializer):
+    images = ClubHistoryImageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ClubHistory
+        fields = ['id', 'section_type', 'title', 'description', 'images']

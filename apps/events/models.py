@@ -153,3 +153,20 @@ class EventGallery(Event):
         proxy = True
         verbose_name = "All Event Photos"
         verbose_name_plural = "All Event Photos"
+
+
+# ── Running Event Slider ──────────────────────────────────────────────────────
+class RunningEventSlider(models.Model):
+    """Multiple slider images shown at the top of the Running Events section."""
+    image      = models.ImageField(upload_to="events/running/slider/")
+    order      = models.PositiveIntegerField(default=0, help_text="Lower number = shown first")
+    is_active  = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Running Event Slider #{self.order}"
+
+    class Meta:
+        verbose_name        = "Running Event Slider Image"
+        verbose_name_plural = "Running Event Slider Images"
+        ordering            = ["order", "-created_at"]

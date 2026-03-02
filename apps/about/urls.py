@@ -9,6 +9,9 @@ from .views import (
     DetilImagesAPIView,
     SocialMediaLinkListAPIView,
     PresidentAPIView,
+    BeyondThinkingAPIView,
+    BeyondThinkingLeftAPIView,
+    BeyondThinkingRightAPIView,
 )
 
 urlpatterns = [
@@ -26,4 +29,9 @@ urlpatterns = [
     
     path('social-links/', SocialMediaLinkListAPIView.as_view(), name='social-links'),
     path('detail-image/', DetilImagesAPIView.as_view(), name='detail-image'),
+
+    # Club History Section
+    path('club-history/beyond-thinking/', BeyondThinkingAPIView.as_view(), name='club-history-beyond-thinking'),
+    path('club-history/beyond-thinking-left/', BeyondThinkingLeftAPIView.as_view(), name='club-history-beyond-thinking-left'),
+    path('club-history/beyond-thinking-right/', BeyondThinkingRightAPIView.as_view(), name='club-history-beyond-thinking-right'),
 ]
