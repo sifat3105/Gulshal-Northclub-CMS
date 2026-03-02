@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import EventHero, Event, EventImage
+from .models import EventHero, Event, EventImage, RunningEventSlider
 
 # Event Hero serializers section
 class EventHeroSerializer(serializers.ModelSerializer):
@@ -37,3 +37,10 @@ class EventSerializer(serializers.ModelSerializer):
             "images",
             "created_at",
         ]
+
+
+# ── Running Event Slider Serializer ───────────────────────────────────────────
+class RunningEventSliderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = RunningEventSlider
+        fields = ["id", "image", "order"]

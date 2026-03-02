@@ -10,6 +10,11 @@ from .models import (
     BoardMember,
     DetailImage,
     SocialMediaLink,
+    ClubHistory,
+    ClubHistoryImage,
+    BeyondThinking,
+    BeyondThinkingLeft,
+    BeyondThinkingRight,
 )
 from project.admin_helpers import CMSSingletonAdmin, CMSModelAdmin, image_preview, text_excerpt
 
@@ -114,3 +119,59 @@ class BoardMemberAdmin(CMSModelAdmin):
     @admin.display(description="Photo")
     def photo_preview(self, obj):
         return image_preview(obj, "member_image", width=60, height=60)
+
+
+# ── Club History Admin ────────────────────────────────────────────────────────
+class ClubHistoryImageInline(admin.TabularInline):
+    model = ClubHistoryImage
+    extra = 1
+    fields = ("image", "image_preview_col")
+    readonly_fields = ("image_preview_col",)
+
+    @admin.display(description="Preview")
+    def image_preview_col(self, obj):
+        return image_preview(obj, "image", width=90, height=60)
+
+
+class BaseClubHistoryAdmin(CMSModelAdmin):
+    inlines = [ClubHistoryImageInline]
+    list_display   = ("id", "title", "description_preview")
+    search_fields  = ("title", "description")
+    ordering       = ("-id",)
+    section_type   = None
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if self.section_type:
+            return qs.filter(section_type=self.section_type)
+        return qs
+
+    def save_model(self, request, obj, form, change):
+        if self.section_type:
+            obj.section_type = self.section_type
+        super().save_model(request, obj, form, change)
+
+    def get_fields(self, request, obj=None):
+        fields = list(super().get_fields(request, obj))
+        if "section_type" in fields:
+            fields.remove("section_type")
+        return fields
+
+    @admin.display(description="Description")
+    def description_preview(self, obj):
+        return text_excerpt(obj.description, length=90)
+
+
+@admin.register(BeyondThinking)
+class BeyondThinkingAdmin(BaseClubHistoryAdmin):
+    section_type = "beyond_thinking"
+
+
+@admin.register(BeyondThinkingLeft)
+class BeyondThinkingLeftAdmin(BaseClubHistoryAdmin):
+    section_type = "beyond_thinking_left"
+
+
+@admin.register(BeyondThinkingRight)
+class BeyondThinkingRightAdmin(BaseClubHistoryAdmin):
+    section_type = "beyond_thinking_right"

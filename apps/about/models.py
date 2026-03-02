@@ -96,6 +96,66 @@ class DetailImage(models.Model):
         return self.detail_image.name
 
 
+# ── Club History Section ──────────────────────────────────────────────────────
+class ClubHistory(models.Model):
+    SECTION_CHOICES = [
+        ("beyond_thinking",       "Beyond Thinking"),
+        ("beyond_thinking_left",  "Beyond Thinking Left"),
+        ("beyond_thinking_right", "Beyond Thinking Right"),
+    ]
+
+    section_type = models.CharField(
+        max_length=30,
+        choices=SECTION_CHOICES,
+        db_index=True,
+    )
+    title       = models.CharField(max_length=255)
+    description = models.TextField()
+
+    def __str__(self):
+        return f"{self.get_section_type_display()} — {self.title}"
+
+    class Meta:
+        verbose_name        = "Club History"
+        verbose_name_plural = "Club History"
+
+
+class ClubHistoryImage(models.Model):
+    club_history = models.ForeignKey(
+        ClubHistory, on_delete=models.CASCADE, related_name="images"
+    )
+    image = models.ImageField(upload_to="about/club_history/")
+
+    def __str__(self):
+        return f"Image for {self.club_history}"
+
+    class Meta:
+        verbose_name        = "Club History Image"
+        verbose_name_plural = "Club History Images"
+
+
+# Proxy models for clean admin separation
+class BeyondThinking(ClubHistory):
+    class Meta:
+        proxy = True
+        verbose_name        = "Beyond Thinking"
+        verbose_name_plural = "Beyond Thinking"
+
+
+class BeyondThinkingLeft(ClubHistory):
+    class Meta:
+        proxy = True
+        verbose_name        = "Beyond Thinking Left"
+        verbose_name_plural = "Beyond Thinking Left"
+
+
+class BeyondThinkingRight(ClubHistory):
+    class Meta:
+        proxy = True
+        verbose_name        = "Beyond Thinking Right"
+        verbose_name_plural = "Beyond Thinking Right"
+
+
 class SocialMediaLink(models.Model):
     board_member = models.ForeignKey(BoardMember, on_delete=models.CASCADE, related_name="social_links")
     platform_name = models.CharField(max_length=50, help_text="e.g. Facebook, Twitter")

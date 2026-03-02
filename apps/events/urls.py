@@ -13,6 +13,8 @@ from .views import (
     RunningEventHeroAPIView,
     UpcomingEventHeroAPIView,
     PastEventHeroAPIView,
+
+    RunningEventSliderAPIView,
 )
 
 
@@ -34,4 +36,6 @@ urlpatterns = [
     path("fine-dining-2/", FineDiningSecondAPIView.as_view()),
 
     path("gallery/", EventGalleryAPIView.as_view()),
+
+    path("running/slider/", RunningEventSliderAPIView.as_view()),
 ]

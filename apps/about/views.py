@@ -121,3 +121,35 @@ class SocialMediaLinkListAPIView(APIView):
             'status_code': status.HTTP_200_OK,
             'data': serializer.data
         })
+
+
+# ── Club History Views ──────────────────────────────────────────────────────
+class BaseClubHistoryAPIView(APIView):
+    section_type = None
+
+    def get(self, request):
+        items = (
+            ClubHistory.objects
+            .filter(section_type=self.section_type)
+            .prefetch_related('images')
+        )
+        serializer = ClubHistorySerializer(items, many=True)
+        return Response({
+            'status': 'success',
+            'section': self.section_type,
+            'message': 'Club history data fetched successfully',
+            'count': items.count(),
+            'data': serializer.data,
+        }, status=status.HTTP_200_OK)
+
+
+class BeyondThinkingAPIView(BaseClubHistoryAPIView):
+    section_type = "beyond_thinking"
+
+
+class BeyondThinkingLeftAPIView(BaseClubHistoryAPIView):
+    section_type = "beyond_thinking_left"
+
+
+class BeyondThinkingRightAPIView(BaseClubHistoryAPIView):
+    section_type = "beyond_thinking_right"

@@ -13,6 +13,7 @@ from .models import (
     LiveMusic,
     FineDiningSecond,
     EventGallery,
+    RunningEventSlider,
 )
 from project.admin_helpers import CMSModelAdmin, image_preview
 
@@ -144,3 +145,16 @@ class FineDiningSecondAdmin(BaseEventAdmin):
 @admin.register(EventGallery)
 class EventGalleryAdmin(BaseEventAdmin):
     event_type = "gallery"
+
+
+# ── Running Event Slider Admin ────────────────────────────────────────────────
+@admin.register(RunningEventSlider)
+class RunningEventSliderAdmin(CMSModelAdmin):
+    list_display  = ("id", "order", "is_active", "image_preview_col", "created_at")
+    list_filter   = ("is_active",)
+    ordering      = ("order", "-created_at")
+    list_editable = ("order", "is_active")
+
+    @admin.display(description="Preview")
+    def image_preview_col(self, obj):
+        return image_preview(obj, "image", width=120, height=70)
