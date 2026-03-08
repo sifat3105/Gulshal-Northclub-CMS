@@ -7,6 +7,8 @@ from .models import (
     Provide,
     ImpressionsImages,
     Impressions,
+    Suite,
+    SuiteImage,
 )
 from project.admin_helpers import CMSSingletonAdmin, CMSModelAdmin, image_preview, text_excerpt
 
@@ -99,3 +101,24 @@ class ImpressionsImagesAdmin(CMSModelAdmin):
     @admin.display(description="Image")
     def image_preview(self, obj):
         return image_preview(obj, "image", width=80, height=60)
+    
+    
+class SuiteImageInline(admin.TabularInline):
+    model = SuiteImage
+    extra = 0
+    fields = ("image", "is_cover", "order", "image_preview")
+    readonly_fields = ("image_preview",)
+
+    @admin.display(description="Preview")
+    def image_preview(self, obj):
+        return image_preview(obj, "image", width=80, height=60)
+
+
+@admin.register(Suite)
+class SuiteAdmin(admin.ModelAdmin):
+    list_display = ["id", "title", "area", "bed_type", "max_guests", "price_per_night", "is_active", "order"]
+    list_editable = ['is_active', 'order']
+    prepopulated_fields = {'slug': ('title',)}
+    inlines = [SuiteImageInline]
+
+    

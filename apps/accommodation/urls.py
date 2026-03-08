@@ -6,7 +6,9 @@ from .views import (
     LuxuryAPI,
     ProvideAPI,
     ImpressionsImagesAPI,
-    ImpressionsAPI
+    ImpressionsAPI,
+    SuiteListView,
+    SuiteDetailView,
 )
 
 urlpatterns = [
@@ -17,5 +19,7 @@ urlpatterns = [
     path('provide/', ProvideAPI.as_view()),
     path('below-impressions/', ImpressionsImagesAPI.as_view()),
     path('impressions/', ImpressionsAPI.as_view()),
+    path('suites/', SuiteListView.as_view()),
+    path('suites/<slug:slug>/', SuiteDetailView.as_view()),
 ]
 

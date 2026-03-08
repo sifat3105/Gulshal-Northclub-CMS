@@ -1,0 +1,68 @@
+# Home Page
+
+- [x] Heroes -> All OK
+- [x] Board Of Derectors -> Api Not Found
+- [x] Exclusive Club Facilities -> All OK
+- [x] Our Moments -> All OK
+- [ ] Affiliations & Collaborations -> Api Not Found
+- [x] Our Club Events -> All OK
+
+# About Us Page
+
+## Club History
+
+    - [x] Heritage -> All OK
+    - [ ] Beyond Thinking -> Api Not Found
+    - [ ] Beyond Thinking Left -> Api Not Found
+    - [ ] Beyond Thinking Right -> Api Not Found
+    - [x] Top Gallery -> All OK
+    - [x] Bottom Gallery -> All OK
+
+## About President
+
+    - [x] President Name -> All OK
+    - [x] President Designation -> All OK
+    - [x] President Message -> All OK
+    - [ ] President Social Links -> Data Not Found
+
+## Board Of Director
+
+    - [x] President Card -> All OK
+    - [x] Board Of Member -> All OK
+
+## Meet Our Founder Member
+
+    - [x] President Card -> All OK
+    - [x] Board Of Member -> All OK
+
+# Facilities
+
+    - [x] President Name -> All OK
+    - [x] President Designation -> All OK
+    - [x] President Message -> All OK
+    - [ ] President Social Links -> Data Not Found
+
+# Events
+
+## Running Events
+
+    - [x] Running Event Hero -> All OK
+    - [ ] Slider Image -> Api Not Found
+    - [x] Experiences Member -> All OK
+    - [x] Completed Events -> All OK
+    - [x] Past Events -> All OK
+
+## Upcoming Events
+
+    - [x] Upcoming Event Hero -> All OK
+    - [x] Event Inspire -> All OK
+    - [ ] Past Events Photos -> Api Not Found
+    - [ ] Event Photos -> Api Not Found
+
+## Past Events
+
+    - [x] Past Event Hero -> All OK
+    - [x] Our Moments -> All OK
+    - [x] Fine Dinning ->  All OK
+    - [ ] Live Music -> Api should be proper way
+    - [x] Fine Dinning ->  All OK
