@@ -18,8 +18,11 @@ from .views import (
     MenuFineDiningSecondAPIView
 )
 
+# Importing the OurMomentsAPIView from home app as maruf vai requested
+from apps.home.views import OurMomentsAPIView  
+
 urlpatterns = [
-    path("memberships/", MembershipGalleryAPIView.as_view()),
+    path("memberships/", OurMomentsAPIView.as_view()),
     path("reservation/", ReservationGalleryAPIView.as_view()),
     path("menu/", MenuGalleryAPIView.as_view()),
 
