@@ -17,6 +17,8 @@ from .views import (
     RunningEventSliderAPIView,
 )
 
+# Importing the OurMomentsAPIView from home app as maruf vai requested
+from apps.home.views import OurMomentsAPIView  
 
 urlpatterns = [
     path("running/event/hero/", RunningEventHeroAPIView.as_view()),
@@ -35,7 +37,7 @@ urlpatterns = [
     path("live-music/", LiveMusicAPIView.as_view()),
     path("fine-dining-2/", FineDiningSecondAPIView.as_view()),
 
-    path("gallery/", EventGalleryAPIView.as_view()),
+    path("gallery/", OurMomentsAPIView.as_view()),
 
     path("running/slider/", RunningEventSliderAPIView.as_view()),
 ]
