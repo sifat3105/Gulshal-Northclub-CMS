@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 from .models import (
     AccommodationHero,
@@ -9,7 +10,9 @@ from .models import (
     Luxury,
     Provide,
     ImpressionsImages,
-    Impressions
+    Impressions,
+    Suite,
+    SuiteImage,
 )
 
 from .serializers import (
@@ -19,7 +22,10 @@ from .serializers import (
     LuxurySerializer,
     ProvideSerializer,
     ImpressionsImagesSerializer,
-    ImpressionsSerializer
+    ImpressionsSerializer,
+    SuiteImageSerializer,
+    SuiteListSerializer,
+    SuiteDetailSerializer,
 )
 
 
@@ -105,5 +111,30 @@ class ImpressionsAPI(APIView):
             'status': 'success',
             'status_code': status.HTTP_200_OK,
             'message': 'Impressions fetched successfully',
+            'data': serializer.data
+        })
+
+
+class SuiteListView(APIView):
+    
+    def get(self, request):
+        suites = Suite.objects.filter(is_active=True)
+        serializer = SuiteListSerializer(suites, many=True, context={'request': request})
+        return Response({
+            'status': 'success',
+            'status_code': status.HTTP_200_OK,
+            'message': 'Suites fetched successfully',
+            'data': serializer.data
+        })
+        
+class SuiteDetailView(APIView):
+    
+    def get(self, request, slug):
+        suite = get_object_or_404(Suite.objects.prefetch_related('images'), slug=slug, is_active=True)
+        serializer = SuiteDetailSerializer(suite, context={'request': request})
+        return Response({
+            'status': 'success',
+            'status_code': status.HTTP_200_OK,
+            'message': 'Suite details fetched successfully',
             'data': serializer.data
         })

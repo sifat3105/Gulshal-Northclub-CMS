@@ -6,7 +6,9 @@ from .models import (
     Luxury,
     Provide,
     ImpressionsImages,
-    Impressions
+    Impressions,
+    Suite,
+    SuiteImage,
 )
 
 # Accommodation Hero Serializer
@@ -59,3 +61,40 @@ class ImpressionsSerializer(serializers.ModelSerializer):
         model = Impressions
         fields = '__all__'
 
+
+
+
+#Suite & Suite Image Serializers
+class SuiteImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SuiteImage
+        fields = ['id', 'image', 'is_cover', 'order']
+        
+
+class SuiteListSerializer(serializers.ModelSerializer):
+    cover_image = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Suite
+        fields = ['id', 'title', 'slug', 'area', 'bed_type', 'max_guests', 'description', 'price_per_night', 'cover_image']
+        
+        
+    def get_cover_image(self, obj):
+        cover = obj.images.filter(is_cover=True).first() or obj.images.first()
+        
+        if cover:
+            request = self.context.get('request')
+            return request.build_absolute_uri(cover.image.url) if request else cover.image.url
+        return None
+    
+
+class SuiteDetailSerializer(serializers.ModelSerializer):
+    images = SuiteImageSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Suite
+        fields = ['id', 'title', 'slug', 'area', 'bed_type', 'max_guests', 'description', 'price_per_night', 'images']
+        
+
+
+        
