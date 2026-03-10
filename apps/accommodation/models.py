@@ -52,9 +52,17 @@ class Luxury(TimeStamp):
     def __str__(self):
         return self.title
 
+# Suites Section Head
+class ProvideHead(TimeStamp):
+    head_text = models.CharField(max_length=255, default="Select Your Best Suites")
+    descriptions = models.TextField(max_length=500)
+
+    def __str__(self):
+        return self.head_text
 
 #  We Provide Section Model
 class Provide(TimeStamp):
+    provide_head = models.OneToOneField(ProvideHead, on_delete=models.SET_NULL, null=True, blank=True, related_name='provide')
     service_icon = models.ImageField(upload_to='accommodation/provide', blank=True, null=True)
     service_name = models.CharField(max_length=255)
     short_descriptions = models.TextField()
@@ -90,14 +98,23 @@ class ImpressionsImages(TimeStamp):
     def __str__(self):
         return f"Image for {self.impression.title}"
     
+# Suite Head
+class SuiteHead(TimeStamp, models.Model):
+    head_text = models.CharField(max_length=255, default="Select Your Best Suites")
+    def ___str__(self):
+        return self.head_text
     
-
 class Suite(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique = True)
+    suite_head = models.OneToOneField(SuiteHead, on_delete=models.SET_NULL, null=True, blank=True, related_name='suite')
     area = models.PositiveIntegerField(help_text= "Area in m²")
+    area_icon = models.ImageField(upload_to='accommodation/suites/icons/', blank=True, null=True)
     bed_type = models.CharField(max_length=255)
+    bed_icon = models.ImageField(upload_to='accommodation/suites/icons/', blank=True, null=True)
     max_guests = models.PositiveIntegerField()
+    guest_icon = models.ImageField(upload_to='accommodation/suites/icons/', blank=True, null=True)
+
     description = models.TextField()
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2)
     is_active = models.BooleanField(default=True)

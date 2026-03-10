@@ -9,6 +9,8 @@ from .models import (
     Impressions,
     Suite,
     SuiteImage,
+    ProvideHead,
+    SuiteHead
 )
 from project.admin_helpers import CMSSingletonAdmin, CMSModelAdmin, image_preview, text_excerpt
 
@@ -56,7 +58,11 @@ class LuxuryAdmin(CMSModelAdmin):
     def image_preview(self, obj):
         return image_preview(obj, "image", width=80, height=60)
 
-
+@admin.register(ProvideHead)
+class ProvideHeadAdmin(CMSSingletonAdmin):
+    list_display = ("id", "head_text", "created_at", "updated_at")
+    search_fields = ("head_text",)
+    
 @admin.register(Provide)
 class ProvideAdmin(CMSModelAdmin):
     list_display = ("id", "service_name", "icon_preview", "description_preview", "created_at")
@@ -113,6 +119,10 @@ class SuiteImageInline(admin.TabularInline):
     def image_preview(self, obj):
         return image_preview(obj, "image", width=80, height=60)
 
+@admin.register(SuiteHead)
+class SuiteHeadAdmin(CMSSingletonAdmin):
+    list_display = ("id", "head_text", "created_at", "updated_at")
+    search_fields = ("head_text",)
 
 @admin.register(Suite)
 class SuiteAdmin(admin.ModelAdmin):

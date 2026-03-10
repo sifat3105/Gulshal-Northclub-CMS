@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import Event, EventHero, RunningEventSlider
-from .serializers import EventSerializer, EventHeroSerializer, RunningEventSliderSerializer
+from .models import Event, EventHero, RunningEventSlider, LiveMusic
+from .serializers import EventSerializer, EventHeroSerializer, RunningEventSliderSerializer, LiveMusicSerializer
 
 
 
@@ -109,8 +109,25 @@ class FineDiningAPIView(BaseEventAPIView):
     event_type = "fine_dining"
 
 
-class LiveMusicAPIView(BaseEventAPIView):
-    event_type = "live_music"
+class LiveMusicAPIView(APIView):
+    def get(self, request):
+        queryset = (
+            LiveMusic.objects
+            .filter(event_type="live_music", is_active=True)
+            .prefetch_related("live_music_images")
+            .order_by("-created_at")
+        )
+        serializer = LiveMusicSerializer(queryset, many=True, context={"request": request})
+        return Response(
+            {
+                "status": "success",
+                "section": "live_music",
+                "message": "Event data fetched successfully",
+                "count": queryset.count(),
+                "data": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 class FineDiningSecondAPIView(BaseEventAPIView):
