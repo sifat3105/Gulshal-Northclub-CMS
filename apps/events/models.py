@@ -1,5 +1,7 @@
 from django.db import models
 
+from apps.home.models import TimeStamp
+
 
 # Event hero model
 class EventHero(models.Model):
@@ -170,3 +172,18 @@ class RunningEventSlider(models.Model):
         verbose_name        = "Running Event Slider Image"
         verbose_name_plural = "Running Event Slider Images"
         ordering            = ["order", "-created_at"]
+
+
+# Live music with three images galary
+class LiveMusicImage(TimeStamp):
+    IMAGE_TYPE_CHOICES = [
+        ('gallery_1', 'Gallery 1'),
+        ('gallery_2', 'Gallery 2'),
+        ('gallery_3', 'Gallery 3'),
+    ]
+    live_music = models.ForeignKey(LiveMusic, on_delete=models.CASCADE, related_name='live_music_images')
+    image = models.ImageField(upload_to='events/images/')
+    image_type = models.CharField(max_length=20, choices=IMAGE_TYPE_CHOICES, default='gallery_1')
+
+    def __str__(self):
+        return f"{self.image_type} - {self.live_music.title}"

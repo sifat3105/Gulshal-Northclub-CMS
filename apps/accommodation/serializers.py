@@ -66,9 +66,16 @@ class ImpressionsSerializer(serializers.ModelSerializer):
 
 #Suite & Suite Image Serializers
 class SuiteImageSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = SuiteImage
         fields = ['id', 'image', 'is_cover', 'order']
+
+    def get_image(self, obj):
+        if obj.image:
+            return obj.image.url
+        return None
         
 
 class SuiteListSerializer(serializers.ModelSerializer):
@@ -81,10 +88,8 @@ class SuiteListSerializer(serializers.ModelSerializer):
         
     def get_cover_image(self, obj):
         cover = obj.images.filter(is_cover=True).first() or obj.images.first()
-        
-        if cover:
-            request = self.context.get('request')
-            return request.build_absolute_uri(cover.image.url) if request else cover.image.url
+        if cover and cover.image:
+            return cover.image.url
         return None
     
 

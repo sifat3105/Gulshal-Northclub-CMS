@@ -11,6 +11,7 @@ from .models import (
     CompletedEvent,
     FineDining,
     LiveMusic,
+    LiveMusicImage,
     FineDiningSecond,
     EventGallery,
     RunningEventSlider,
@@ -132,9 +133,21 @@ class FineDiningAdmin(BaseEventAdmin):
     event_type = "fine_dining"
 
 
+class LiveMusicImageInline(admin.TabularInline):
+    model = LiveMusicImage
+    extra = 1
+    fields = ("image_type", "image", "image_preview")
+    readonly_fields = ("image_preview",)
+
+    @admin.display(description="Preview")
+    def image_preview(self, obj):
+        return image_preview(obj, "image", width=80, height=60)
+
+
 @admin.register(LiveMusic)
 class LiveMusicAdmin(BaseEventAdmin):
     event_type = "live_music"
+    inlines = [LiveMusicImageInline]
 
 
 @admin.register(FineDiningSecond)
